@@ -1,21 +1,19 @@
 package com.kleberaluizio.api.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
 import java.util.UUID;
 
-@Entity
+@Entity(name = "supplier")
+@Table(name = "supplier")
 public class Supplier {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @NotBlank
     private String name;
     @Email(message = "Not valid")
@@ -37,7 +35,7 @@ public class Supplier {
         this.cnpj = cnpj;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
