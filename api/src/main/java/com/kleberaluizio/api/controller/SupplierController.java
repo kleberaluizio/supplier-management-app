@@ -4,16 +4,18 @@ import com.kleberaluizio.api.model.Supplier;
 import com.kleberaluizio.api.model.SupplierDTO;
 import com.kleberaluizio.api.service.SupplierService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("api/v1/suppliers")
+@RequestMapping("suppliers")
 public class SupplierController {
 
     private final SupplierService supplierService;
@@ -41,8 +43,8 @@ public class SupplierController {
     @PutMapping
     @RequestMapping("/{supplierId}")
     @Transactional
-    public ResponseEntity<?> updateSupplier(@PathVariable("supplierId") Long supplierId,
-                                            @Valid @RequestBody SupplierDTO supplierDTO){
+    public ResponseEntity updateSupplier(@PathVariable("supplierId") Long supplierId,
+                                                  @Valid @RequestBody SupplierDTO supplierDTO){
 
         return supplierService.updateSupplier(supplierId, supplierDTO);
 

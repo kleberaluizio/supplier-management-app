@@ -22,7 +22,7 @@ public class SupplierService {
 
     public ResponseEntity addSupplier(SupplierDTO registrationSupplierDTO){
 
-        // Check if cnpj already exists
+        // Check if cnpj already exists (This is a unique data for each Supplier)
         String cnpj = registrationSupplierDTO.cnpj();
 
         if (supplierRepository.existsSupplierByCnpj(cnpj)) {
@@ -53,7 +53,7 @@ public class SupplierService {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(supplierRepository.findById(supplierId));
     }
 
-    public ResponseEntity<?> updateSupplier(Long supplierId, SupplierDTO supplierDTO) {
+    public ResponseEntity updateSupplier(Long supplierId, SupplierDTO supplierDTO) {
 
         // Checks if supplier id exists
         Optional<Supplier> supplier = supplierRepository.findById(supplierId);
