@@ -32,8 +32,7 @@ public class SupplierController {
 
     @GetMapping
     public ResponseEntity<List<Supplier>> getSuppliers(){
-        List<Supplier> suppliers = supplierService.getAllSuppliers();
-        return ResponseEntity.status(HttpStatus.OK).body(suppliers);
+        return supplierService.getAllSuppliers();
     }
     @GetMapping("/{supplierId}")
     public ResponseEntity<?> getSupplier(@PathVariable("supplierId") Long supplierId){

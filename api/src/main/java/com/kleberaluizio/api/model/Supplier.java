@@ -14,12 +14,9 @@ public class Supplier {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank
     private String name;
-    @Email(message = "Not valid")
     private String email;
     private String comment;
-    @Pattern(regexp = "^\\d{2}\\.\\d{3}.\\d{3}/\\d{4}-\\d{2}$")
     private String cnpj;
 
     public Supplier(){};
@@ -34,10 +31,10 @@ public class Supplier {
     };
 
     public Supplier(
-            @NotBlank String name,
-            @Email(message = "Not valid") String email,
+            String name,
+            String email,
             String comment,
-            @Pattern(regexp = "^\\d{2}\\.\\d{3}.\\d{3}/\\d{4}-\\d{2}$") String cnpj) {
+            String cnpj) {
         this.name = name;
         this.email = email;
         this.comment = comment;
