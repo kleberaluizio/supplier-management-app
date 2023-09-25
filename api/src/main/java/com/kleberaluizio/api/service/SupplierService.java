@@ -20,37 +20,28 @@ public class SupplierService {
         this.supplierRepository = supplierRepository;
     }
 
-    public List<Supplier> getAllSuppliers(){
-        return supplierRepository.findAll();
-    }
-
-    public Optional<Supplier> getSupplier(Long id){
-        return supplierRepository.findById(id);
-    }
-
-    public ResponseEntity<?> addSupplier(SupplierDTO registrationSupplierDTO){
+    public ResponseEntity addSupplier(SupplierDTO registrationSupplierDTO){
 
         // Check if cnpj already exists
         String cnpj = registrationSupplierDTO.cnpj();
+
         if (supplierRepository.existsSupplierByCnpj(cnpj)) {
             String message = "Fornecedor com CNPJ duplicado";
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
         }
 
-        Supplier newSupplier = new Supplier(
-                registrationSupplierDTO.name(),
-                registrationSupplierDTO.email(),
-                registrationSupplierDTO.comment(),
-                registrationSupplierDTO.cnpj()
-        );
+        Supplier newSupplier = new Supplier(registrationSupplierDTO);
 
         supplierRepository.save(newSupplier);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
-
     }
 
-    public ResponseEntity<?> deleteSupplierById(Long supplierId) {
+    public List<Supplier> getAllSuppliers(){
+        return supplierRepository.findAll();
+    }
+
+    public ResponseEntity<?> getSupplier(Long supplierId){
         // Checks if supplier id exists
         Optional<Supplier> supplier = supplierRepository.findById(supplierId);
         if (supplier.isEmpty()) {
@@ -58,38 +49,62 @@ public class SupplierService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
         }
 
+
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(supplierRepository.findById(supplierId));
+    }
+
+    public ResponseEntity<?> updateSupplier(Long supplierId, SupplierDTO supplierDTO) {
+
+        // Checks if supplier id exists
+        Optional<Supplier> supplier = supplierRepository.findById(supplierId);
+
+        if (supplier.isEmpty()) {
+            String message = "Supplier with id [%s] not found!".formatted(supplierId);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+        }
+
+        boolean changes = false;
+
+        Supplier updateSupplier = supplier.get();
+
+        if (supplierDTO.name() != null && !supplierDTO.name().equals(updateSupplier.getName())) {
+            updateSupplier.setName(supplierDTO.name());
+            changes = true;
+        }
+
+        if (supplierDTO.email() != null && !supplierDTO.email().equals(updateSupplier.getEmail())) {
+            updateSupplier.setEmail(supplierDTO.email());
+            changes = true;
+        }
+
+        if (supplierDTO.comment() != null && !supplierDTO.comment().equals(updateSupplier.getComment())) {
+            updateSupplier.setComment(supplierDTO.comment());
+            changes = true;
+        }
+
+        if (supplierDTO.cnpj() != null && !supplierDTO.cnpj().equals(updateSupplier.getCnpj())) {
+            updateSupplier.setCnpj(supplierDTO.cnpj());
+            changes = true;
+        }
+
+        if(changes){
+            supplierRepository.save(updateSupplier);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+        }
+
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body("Update was not needed!");
+
+    }
+
+    public ResponseEntity deleteSupplierById(Long supplierId) {
+        // Checks if supplier id exists
+        Optional<Supplier> supplier = supplierRepository.findById(supplierId);
+        if (supplier.isEmpty()) {
+            String message = "Supplier with id [%s] not found!".formatted(supplierId);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+        }
+
         supplierRepository.deleteById(supplierId);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
-
-//    public ResponseEntity<?> updateCustomer(Long id, SupplierDTO updateSupplierRequest){
-//
-//        // Check if id exists
-//        Supplier customer = getSu(customerId);
-//
-//        boolean changes = false;
-//
-//        //update
-//        if (updateRequest.name() != null && !updateRequest.name().equals(customer.getName())) {
-//            customer.setName(updateRequest.name());
-//            changes = true;
-//        }
-//        if (updateRequest.age() != null && !updateRequest.age().equals(customer.getAge())) {
-//            customer.setAge(updateRequest.age());
-//            changes = true;
-//        }
-//
-//        if (updateRequest.email() != null && !updateRequest.email().equals(customer.getEmail())) {
-//            if (customerDao.existsPersonWithEmail(updateRequest.email())) {
-//                throw new DuplicateResourceException("Email already taken");
-//            }
-//            customer.setEmail(updateRequest.email());
-//            changes = true;
-//        }
-//
-//        if(!changes) {
-//            throw new RequestValidationException("no data changes found");
-//        }
-//
-//    }
 }

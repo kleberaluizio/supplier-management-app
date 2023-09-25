@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/suppliers")
@@ -21,32 +22,36 @@ public class SupplierController {
         this.supplierService = supplierService;
     }
 
+    @PostMapping
+    @Transactional
+    public ResponseEntity registerSupplier(@Valid @RequestBody SupplierDTO supplierDTO){
+        return supplierService.addSupplier(supplierDTO);
+    }
+
     @GetMapping
     public ResponseEntity<List<Supplier>> getSuppliers(){
-
         List<Supplier> suppliers = supplierService.getAllSuppliers();
         return ResponseEntity.status(HttpStatus.OK).body(suppliers);
     }
+    @GetMapping("/{supplierId}")
+    public ResponseEntity<?> getSupplier(@PathVariable("supplierId") Long supplierId){
+        return supplierService.getSupplier(supplierId);
+    }
 
-    @PostMapping
+    @PutMapping
+    @RequestMapping("/{supplierId}")
     @Transactional
-    public ResponseEntity<?> registerSupplier(@Valid @RequestBody SupplierDTO supplierDTO){
-        supplierService.addSupplier(supplierDTO);
-        return supplierService.addSupplier(supplierDTO);
+    public ResponseEntity<?> updateSupplier(@PathVariable("supplierId") Long supplierId,
+                                            @Valid @RequestBody SupplierDTO supplierDTO){
+
+        return supplierService.updateSupplier(supplierId, supplierDTO);
+
     }
 
     @DeleteMapping("/{supplierId}")
     @Transactional
-    public ResponseEntity<?> deleteSupplier(@PathVariable("id") Long supplierId){
+    public ResponseEntity deleteSupplier(@PathVariable("supplierId") Long supplierId){
         return supplierService.deleteSupplierById(supplierId);
     }
 
-//    @PutMapping
-//    @Transactional
-//    @RequestMapping("/{id}")
-//    public ResponseEntity<?> updateSupplier(@PathVariable Long id, @Valid @RequestBody SupplierDTO supplierDTO){
-//
-//        return supplierService.updateCustomer(id, supplierDTO);
-//
-//    }
 }

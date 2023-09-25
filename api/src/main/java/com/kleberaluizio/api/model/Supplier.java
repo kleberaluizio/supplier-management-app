@@ -24,6 +24,15 @@ public class Supplier {
 
     public Supplier(){};
 
+    public Supplier(SupplierDTO supplierDTO){
+        this(
+                supplierDTO.name(),
+                supplierDTO.email(),
+                supplierDTO.comment(),
+                supplierDTO.cnpj()
+        );
+    };
+
     public Supplier(
             @NotBlank String name,
             @Email(message = "Not valid") String email,
@@ -69,5 +78,16 @@ public class Supplier {
 
     public void setCnpj(String cnpj) {
         this.cnpj = cnpj;
+    }
+
+    @Override
+    public String toString() {
+        return "Supplier{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", comment='" + comment + '\'' +
+                ", cnpj='" + cnpj + '\'' +
+                '}';
     }
 }
