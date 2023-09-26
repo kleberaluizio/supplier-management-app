@@ -1,0 +1,210 @@
+openapi: 3.0.3
+info:
+  title: Supplier Data API 3.0
+  description: |-
+    The supplier Data API allows you to retrieve data from suppliers, as well as perform creating, deleting, and updating operations.
+
+
+    
+    Some useful links:
+    - [The Supplier Data API repository](https://github.com/kleberaluizio/supplier-management-app)
+    - [Developer repositories](https://github.com/kleberaluizio)
+  contact:
+    email: kleberaluizio@hotmail.com
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/
+tags:
+  - name: suppliers
+    description: Everything about your Suppliers
+paths:
+  /suppliers:
+    post:
+      tags:
+        - suppliers
+      summary: Add a new supplier to the database
+      description: Add a new supplier to the database
+      operationId: registerSupplier
+      requestBody:
+        description: Create a new supplier in the database
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/suppliers'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/suppliers'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/suppliers'
+        required: true
+      responses:
+        '201':
+          description: Successfully created a new supplier.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/suppliers'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/suppliers'
+        '400':
+          description: Cnpj supplied already stored in the database.
+    get:
+      tags:
+        - suppliers
+      summary: Finds suppliers
+      description: Returns suppliers storage in the database
+      operationId: getSuppliers
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/suppliers'          
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/suppliers'
+        '400':
+          description: Invalid status value
+  /suppliers/{supplierId}:
+    get:
+      tags:
+        - suppliers
+      summary: Find supplier by ID
+      description: Returns a single supplier
+      operationId: getSupplier
+      parameters:
+        - name: supplierId
+          in: path
+          description: ID of supplier to return
+          required: true
+          schema:
+            type: number
+      responses:
+        '200':
+          description: Successfully found supplier by Id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/suppliers'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/suppliers'
+        '404':
+          description: Invalid ID supplied, supplier not found.
+          content:
+            application/json:
+              example: "Not found"
+    put:
+      tags:
+        - suppliers
+      summary: Update an existing supplier
+      description: Update an existing supplier by Id
+      operationId: updateSupplier
+      parameters:
+        - name: supplierId
+          in: path
+          description: Supplier id to update
+          required: true
+          schema:
+            type: number
+      requestBody:
+        description: Update an existent supplier in the database
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/suppliers'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/suppliers'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/suppliers'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/suppliers'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/suppliers'
+        '400':
+          description: Validation exception
+        '404':
+          description: Invalid ID supplied, supplier not found
+    delete:
+      tags:
+        - suppliers
+      summary: Deletes a supplier
+      description: Delete a supplier by Id
+      operationId: deleteSupplier
+      parameters:
+        - name: supplierId
+          in: path
+          description: Supplier id to delete
+          required: true
+          schema:
+            type: number
+      responses:
+        '204':
+          description: Successfully deleted supplier by Id.
+        '404':
+          description: Invalid ID supplied, supplier not found.
+components:
+  schemas:
+    suppliers:
+      required:
+        - name
+        - photoUrls
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        name:
+          type: string
+          example: "Company 1 - Ltda."
+        email:
+          type: string
+          example: "example@company.com"
+        comment:
+          type: string
+          example: "Any comment about this supplier."
+        cnpj:
+          type: string
+          example: "12.345.678/0001-00"
+      xml:
+        name: pet
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        type:
+          type: string
+        message:
+          type: string
+      xml:
+        name: '##default'
+  requestBodies:
+    Pet:
+      description: Pet object that needs to be added to the store
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/suppliers'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/suppliers'
+

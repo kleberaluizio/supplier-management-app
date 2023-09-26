@@ -1,10 +1,12 @@
 package com.kleberaluizio.api.controller;
 
+import com.kleberaluizio.api.config.CorsConfig;
 import com.kleberaluizio.api.model.Supplier;
 import com.kleberaluizio.api.model.SupplierDTO;
 import com.kleberaluizio.api.service.SupplierService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +18,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("suppliers")
+@Import(CorsConfig.class)
 public class SupplierController {
 
     private final SupplierService supplierService;
